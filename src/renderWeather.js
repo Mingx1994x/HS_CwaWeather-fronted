@@ -63,12 +63,12 @@ export function renderWeather(data) {
                                 <div class="advice-item">
                                     <div class="advice-icon">${advice.rainIcon}</div>
                                     <div class="advice-text">${advice.rainText}</div>
-                                    <div style="font-size:0.7rem; color:#999">降雨率 ${current.rain}</div>
+                                    <div class="advice-sub-text">降雨率 ${current.rain}</div>
                                 </div>
                                 <div class="advice-item">
                                     <div class="advice-icon">${advice.clothIcon}</div>
                                     <div class="advice-text">${advice.clothText}</div>
-                                    <div style="font-size:0.7rem; color:#999">最高溫 ${current.maxTemp}°</div>
+                                    <div class="advice-sub-text">最高溫 ${current.maxTemp}°</div>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ export function renderWeather(data) {
                                 <div class="mini-time">${p}</div>
                                 <div class="mini-icon">${getWeatherIcon(f.weather)}</div>
                                 <div class="mini-temp">${f.minTemp}° - ${f.maxTemp}°</div>
-                                <div style="font-size:0.8rem; color:#888; margin-top:5px;">💧${f.rain}</div>
+                                <div class="advice-sub-text">💧${f.rain}</div>
                             </div>
                         `;
   });
@@ -110,33 +110,12 @@ export function renderWeather(data) {
   document.getElementById('updateTime').textContent = `${month}月${date}日 ${days[dayIndex]}`;
 }
 
-export async function fetchWeather() {
-  if (!VITE_API_URL) {
-    console.log("API URL 設置有誤");
-    return
-  }
-  try {
-    // 1. 定義「最低等待時間」：1500 毫秒 (1.5秒)
-    const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
+export const hiddenLoadingOverlay = () => {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
 
-    // 2. 定義「抓取資料」的工作
-    const fetchPromise = fetch(`${VITE_API_URL}/api/weather/general/taichung`).then(res => res.json());
-
-    // 3. Promise.all 會等待「兩個都完成」才會往下走
-    // result 陣列裡，第一個是 delay 的結果(沒用到)，第二個是 api 的 json 資料
-    const [_, json] = await Promise.all([delayPromise, fetchPromise]);
-
-    if (json.success) {
-      renderWeather(json.data);
-
-      // 資料處理好後，隱藏 Loading，顯示主畫面
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-    } else {
-      throw new Error("API Error");
-    }
-  } catch (e) {
-    console.error(e);
-    alert("天氣資料讀取失敗，狸克把網路線咬斷了！");
-  }
+export const showLoadingOverlay = () => {
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('mainContent').style.display = 'none';
 }

@@ -1,5 +1,6 @@
 import './style.css'
-import { fetchWeather } from './renderWeather.js'
+import { fetchWeather } from './fetchWeather'
+import { hiddenLoadingOverlay, renderWeather, showLoadingOverlay } from './renderWeather'
 
 document.querySelector('#app').innerHTML = `
   <div id="loading" class="loading-screen">
@@ -8,7 +9,7 @@ document.querySelector('#app').innerHTML = `
     </div>
     <div class="status-bar">
         <div>
-          <select name="" id="" class="location-pill">
+          <select name="" id="target-city" class="location-pill">
             <option value="taipei">📍臺北市</option>
             <option value="new_taipei">📍新北市</option>
             <option value="hsinchu">📍新竹市</option>
@@ -27,7 +28,23 @@ document.querySelector('#app').innerHTML = `
         <h3 class="section-title">稍後預報</h3>
         <div class="scroll-container" id="futureForecasts">
         </div>
-
     </div>
 `
-fetchWeather()
+
+// 初始化
+const init = async () => {
+  // showLoadingOverlay()
+  renderWeather(await fetchWeather())
+  hiddenLoadingOverlay()
+}
+
+init()
+
+const targetCity = document.querySelector('#target-city')
+targetCity.addEventListener('change', async (e) => {
+  showLoadingOverlay()
+  console.log(e.target.value);
+  renderWeather(await fetchWeather(e.target.value))
+  hiddenLoadingOverlay()
+})
+
