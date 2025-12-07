@@ -1,6 +1,13 @@
-import './style.css'
-import { fetchWeather } from './fetchWeather'
-import { hiddenLoadingOverlay, renderWeather, showLoadingOverlay } from './renderWeather'
+import './style.css';
+import { fetchThreeDaysWeather, fetchWeather } from './fetchWeather';
+import {
+  hiddenLoadingOverlay,
+  renderWeather,
+  showLoadingOverlay,
+} from './renderWeather';
+import { swiper } from './swiper';
+import 'swiper/css';
+import { renderThreeDaysWeather } from './renderThreeDaysWeather';
 
 document.querySelector('#app').innerHTML = `
   <div id="loading" class="loading-screen">
@@ -21,30 +28,38 @@ document.querySelector('#app').innerHTML = `
     </div>
 
     <div class="container" id="mainContent" style="display: none;">
-
         <div id="heroCard">
         </div>
 
-        <h3 class="section-title">稍後預報</h3>
+        <h2 class="section-title">稍後預報</h2>
         <div class="scroll-container" id="futureForecasts">
         </div>
+        <h2 class="section-title">未來 3 天天氣預報</h2>
+        <div class="scroll-container" id="moreForecasts">
+          <div class="swiper mySwiper">
+            <div class="swiper-wrapper" id="three-weather-content">
+      
+            </div>
+          </div>
+        </div>
     </div>
-`
+`;
 
 // 初始化
 const init = async () => {
-  // showLoadingOverlay()
-  renderWeather(await fetchWeather())
-  hiddenLoadingOverlay()
-}
+  renderWeather(await fetchWeather());
+  renderThreeDaysWeather(await fetchThreeDaysWeather());
+  swiper();
+  hiddenLoadingOverlay();
+};
 
-init()
+init();
 
-const targetCity = document.querySelector('#target-city')
+const targetCity = document.querySelector('#target-city');
 targetCity.addEventListener('change', async (e) => {
-  showLoadingOverlay()
-  console.log(e.target.value);
-  renderWeather(await fetchWeather(e.target.value))
-  hiddenLoadingOverlay()
-})
-
+  showLoadingOverlay();
+  renderWeather(await fetchWeather(e.target.value));
+  renderThreeDaysWeather(await fetchThreeDaysWeather(e.target.value));
+  swiper();
+  hiddenLoadingOverlay();
+});
