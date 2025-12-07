@@ -19,8 +19,6 @@ export async function fetchWeather(city = defaultCity) {
     const [_, json] = await Promise.all([delayPromise, fetchPromise]);
 
     if (json.success) {
-      console.log("取得資料成功，回傳資料", json.data);
-
       return json.data
     } else {
       throw new Error("API Error");

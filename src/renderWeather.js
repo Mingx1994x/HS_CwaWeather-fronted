@@ -36,8 +36,9 @@ export function getTimePeriod(startTime) {
   if (hour >= 5 && hour < 11) return "早晨";
   if (hour >= 11 && hour < 14) return "中午";
   if (hour >= 14 && hour < 18) return "下午";
-  if (hour >= 18 && hour < 23) return "晚上";
-  return "深夜";
+  if (hour >= 18 && hour < 21) return "傍晚";
+  if (hour >= 21 && hour < 23) return "夜晚";
+  return "凌晨";
 }
 
 export function renderWeather(data) {
